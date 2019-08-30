@@ -24,4 +24,10 @@ dependencies {
     implementation 'org.springframework.integration:spring-integration-http'
     implementation 'org.springframework.integration:spring-integration-jms'
     implementation 'org.springframework.integration:spring-integration-jmx'
+    implementation 'org.springframework.integration:spring-integration-jdbc'
+    implementation 'org.springframework.integration:spring-integration-xml'
+    implementation 'org.springframework.integration:spring-integration-groovy'
+    implementation 'org.springframework.integration:spring-integration-stream'
+    implementation 'org.springframework.integration:spring-integration-mail'
+    implementation 'org.springframework.integration:spring-integration-http'
 }
