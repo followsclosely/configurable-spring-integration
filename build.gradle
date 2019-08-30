@@ -1,0 +1,27 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.7.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java'
+    id 'jacoco'
+}
+
+group = 'org.mlw'
+version = '1.0.0-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter-integration'
+    implementation 'org.springframework.boot:spring-boot-starter-artemis'
+
+    implementation 'org.springframework.integration:spring-integration-file'
+    implementation 'org.springframework.integration:spring-integration-ip'
+    implementation 'org.springframework.integration:spring-integration-xml'
+    implementation 'org.springframework.integration:spring-integration-http'
+    implementation 'org.springframework.integration:spring-integration-jms'
+    implementation 'org.springframework.integration:spring-integration-jmx'
+}

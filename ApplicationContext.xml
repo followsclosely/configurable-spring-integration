@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-file="http://www.springframework.org/schema/integration/file"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:int-jms="http://www.springframework.org/schema/integration/jms"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans              http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/integration        http://www.springframework.org/schema/integration/spring-integration.xsd
+			http://www.springframework.org/schema/integration/jms    http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd
+            http://www.springframework.org/schema/integration/file   http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
+
+    <bean id="jmsConnectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+        <property name="targetConnectionFactory">
+            <bean class="org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory">
+                <constructor-arg index="0" value="tcp://localhost:61616" />
+                <constructor-arg index="1" value="artemis" />
+                <constructor-arg index="2" value="artemis" />
+            </bean>
+        </property>
+    </bean>
+
+
+    <!-- Drop a file in the directory and it ends up on a destination. -->
+    <int-file:inbound-channel-adapter id="fileIn" directory=".tmp/input" filename-regex=".*" prevent-duplicates="false" >
+        <int:poller fixed-delay="1000" />
+    </int-file:inbound-channel-adapter>
+
+    <int:chain input-channel="fileIn">
+        <int-file:file-to-string-transformer delete-files="true"/>
+        <int-jms:outbound-channel-adapter destination-name="stink" pub-sub-domain="true" />
+    </int:chain>
+
+
+
+    <!-- Subscribe to a destination and drop the file on a directory. -->
+    <int-jms:message-driven-channel-adapter channel="jmsIn" pub-sub-domain="true" destination-name="stink" />
+
+    <int:chain input-channel="jmsIn">
+        <int-file:outbound-channel-adapter directory=".tmp/output" />
+    </int:chain>
+
+
+</beans>
